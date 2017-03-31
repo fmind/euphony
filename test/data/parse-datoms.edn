@@ -1,0 +1,16 @@
+[
+ {:db/id [:label/label "ads.adrd"] :label/words-pattern "w.w" :label/fields-pattern "T.N" :label/vendor-name "adrd" :label/vendor-type "ads"}
+ {:db/id [:label/label "adware.pjapps.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "pjapps" :label/vendor-type "adware"}
+ {:db/id [:label/label "adware.pjapps.b"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "pjapps" :label/vendor-type "adware"}
+ {:db/id [:label/label "andr.adrd"] :label/words-pattern "w.w" :label/fields-pattern "P.N" :label/vendor-name "adrd" :label/vendor-platform "andr"}
+ {:db/id [:label/label "android.adrd.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "adrd" :label/vendor-platform "android"}
+ {:db/id [:label/label "android.koguo.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "koguo" :label/vendor-platform "android"}
+ {:db/id [:label/label "android.pjapps.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "pjapps" :label/vendor-platform "android"}
+ {:db/id [:label/label "dogwin"] :label/words-pattern "w"}
+ {:db/id [:label/label "dogwin.b"] :label/words-pattern "w.w"}
+ {:db/id [:label/label "generic"] :label/words-pattern "w" :label/fields-pattern "I" :label/vendor-name "generic"}
+ {:db/id [:label/label "trj.dogwin"] :label/words-pattern "w.w" :label/fields-pattern "T.N" :label/vendor-name "dogwin" :label/vendor-type "trj"}
+ {:db/id [:label/label "trojan.dogwin.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "dogwin" :label/vendor-type "trojan"}
+ {:db/id [:label/label "trojan.dogwin.b"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "dogwin" :label/vendor-type "trojan"}
+ {:db/id [:label/label "trojan.koguo.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "koguo" :label/vendor-type "trojan"}
+ ]

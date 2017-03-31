@@ -1,0 +1,15 @@
+[
+ {:db/id [:result/result "av1++ads.adrd"] :result/cluster-name "adrd" :result/cluster-type "adware"}
+ {:db/id [:result/result "av1++trj.dogwin"] :result/cluster-name "dogwin" :result/cluster-type "trojan"}
+ {:db/id [:result/result "av2++adware.pjapps.a"] :result/cluster-name "adrd" :result/cluster-type "adware"}
+ {:db/id [:result/result "av2++adware.pjapps.b"] :result/cluster-name "adrd" :result/cluster-type "adware"}
+ {:db/id [:result/result "av2++trojan.koguo.a"] :result/cluster-name "dogwin" :result/cluster-type "trojan"}
+ {:db/id [:result/result "av2++trojan.dogwin.a"] :result/cluster-name "dogwin" :result/cluster-type "trojan"}
+ {:db/id [:result/result "av2++trojan.dogwin.b"] :result/cluster-name "dogwin" :result/cluster-type "trojan"}
+ {:db/id [:result/result "av3++android.adrd.1"] :result/cluster-name "adrd":result/cluster-platform "android"}
+ {:db/id [:result/result "av3++android.koguo.1"] :result/cluster-name "dogwin":result/cluster-platform "android"}
+ {:db/id [:result/result "av3++android.pjapps.1"] :result/cluster-name "pjapps":result/cluster-platform "android"}
+ {:db/id [:result/result "av4++android.koguo.1"] :result/cluster-name "koguo"}
+ {:db/id [:result/result "av4++trojan.dogwin.a"] :result/cluster-name "dogwin"}
+ {:db/id [:result/result "av5++generic"] :result/cluster-name "generic"}
+]

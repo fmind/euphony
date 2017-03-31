@@ -1,0 +1,17 @@
+/target/*
+!/target/uberjar/
+classes/
+stale/
+/checkouts
+pom.xml
+pom.xml.asc
+*.class
+/.lein-*
+/.nrepl-port
+.hgignore
+.hg/
+
+OLD/
+.idea
+setup.yml
+euphony.iml

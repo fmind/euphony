@@ -1,0 +1,4 @@
+- seed.edn: https://www.microsoft.com/security/portal/mmpc/shared/malwarenaming.aspx
+
+- english.dict: /usr/share/dict/american-english
+

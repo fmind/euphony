@@ -1,0 +1,5 @@
+{"resource": "f63256cf4eef0a60fe56989b1474dd9b0b2bb580ce9fd262b18592bf0506f911", "name": "Adwo", "type": "adware", "platform": "android"}
+{"resource": "a9cbe3e3d446cea683c1e72f2994f40024afed1bb1186b27690ff21741046312", "name": "Dowgin", "type": "trojan", "platform": "linux"}
+{"resource": "9da56b0cb31d412a1ed20fb089f5364acf6b7c0a77c1774c202cd8ff6e13a1ad", "type": "ads"}
+{"resource": "a0196e43aaf90bef85b9661ec23037c79d246d94e1100192295079529d529d97", "name":  "SINGLETON:a0196e43aaf90bef85b9661ec23037c79d246d94e1100192295079529d529d97", "platform": "android"}
+

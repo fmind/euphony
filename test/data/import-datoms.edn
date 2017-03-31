@@ -1,0 +1,63 @@
+[
+ ;; ANTIVIRUS
+ {:db/id "$av1" :antivirus/antivirus "av1"}
+ {:db/id "$av2" :antivirus/antivirus "av2"}
+ {:db/id "$av3" :antivirus/antivirus "av3"}
+ {:db/id "$av4" :antivirus/antivirus "av4"}
+ {:db/id "$av5" :antivirus/antivirus "av5"}
+ ;; LABELS
+ {:db/id "$ads.adrd" :label/label "ads.adrd"}
+ {:db/id "$adware.pjapps.a" :label/label "adware.pjapps.a"}
+ {:db/id "$adware.pjapps.b" :label/label "adware.pjapps.b"}
+ {:db/id "$andr.adrd" :label/label "andr.adrd"}
+ {:db/id "$android.adrd.1" :label/label "android.adrd.1"}
+ {:db/id "$android.koguo.1" :label/label "android.koguo.1"}
+ {:db/id "$android.pjapps.1" :label/label "android.pjapps.1"}
+ {:db/id "$dogwin" :label/label "dogwin"}
+ {:db/id "$dogwin.b" :label/label "dogwin.b"}
+ {:db/id "$generic" :label/label "generic"}
+ {:db/id "$trj.dogwin" :label/label "trj.dogwin"}
+ {:db/id "$trojan.dogwin.a" :label/label "trojan.dogwin.a"}
+ {:db/id "$trojan.dogwin.b" :label/label "trojan.dogwin.b"}
+ {:db/id "$trojan.koguo.a" :label/label "trojan.koguo.a"}
+ ;; ;; RESULTS
+ {:db/id "$av1++ads.adrd" :result/result "av1++ads.adrd" :result/antivirus "$av1" :result/label "$ads.adrd"}
+ {:db/id "$av1++trj.dogwin" :result/result "av1++trj.dogwin" :result/antivirus "$av1" :result/label "$trj.dogwin"}
+ {:db/id "$av2++adware.pjapps.a" :result/result "av2++adware.pjapps.a" :result/antivirus "$av2" :result/label "$adware.pjapps.a"}
+ {:db/id "$av2++adware.pjapps.b" :result/result "av2++adware.pjapps.b" :result/antivirus "$av2" :result/label "$adware.pjapps.b"}
+ {:db/id "$av2++trojan.dogwin.a" :result/result "av2++trojan.dogwin.a" :result/antivirus "$av2" :result/label "$trojan.dogwin.a"}
+ {:db/id "$av2++trojan.dogwin.b" :result/result "av2++trojan.dogwin.b" :result/antivirus "$av2" :result/label "$trojan.dogwin.b"}
+ {:db/id "$av2++trojan.koguo.a" :result/result "av2++trojan.koguo.a" :result/antivirus "$av2" :result/label "$trojan.koguo.a"}
+ {:db/id "$av3++android.adrd.1" :result/result "av3++android.adrd.1" :result/antivirus "$av3" :result/label "$android.adrd.1"}
+ {:db/id "$av3++android.koguo.1" :result/result "av3++android.koguo.1" :result/antivirus "$av3" :result/label "$android.koguo.1"}
+ {:db/id "$av3++android.pjapps.1" :result/result "av3++android.pjapps.1" :result/antivirus "$av3" :result/label "$android.pjapps.1"}
+ {:db/id "$av3++dogwin" :result/result "av3++dogwin" :result/antivirus "$av3" :result/label "$dogwin"}
+ {:db/id "$av4++andr.adrd" :result/result "av4++andr.adrd" :result/antivirus "$av4" :result/label "$andr.adrd"}
+ {:db/id "$av4++android.koguo.1" :result/result "av4++android.koguo.1" :result/antivirus "$av4" :result/label "$android.koguo.1"}
+ {:db/id "$av4++dogwin.b" :result/result "av4++dogwin.b" :result/antivirus "$av4" :result/label "$dogwin.b"}
+ {:db/id "$av4++trojan.dogwin.a" :result/result "av4++trojan.dogwin.a" :result/antivirus "$av4" :result/label "$trojan.dogwin.a"}
+ {:db/id "$av5++generic" :result/result "av5++generic" :result/antivirus "$av5" :result/label "$generic"}
+ ;; SCANS
+ {:db/id "$s1" :scan/scan "s1" :scan/date #inst "2017"
+  :scan/results ["$av1++trj.dogwin", "$av2++trojan.dogwin.a", "$av3++android.koguo.1",  "$av4++android.koguo.1", "$av5++generic"]}
+ {:db/id "$s2" :scan/scan "s2" :scan/date #inst "2017"
+  :scan/results ["$av1++trj.dogwin", "$av2++trojan.koguo.a",  "$av3++android.koguo.1",  ,                        "$av5++generic"]}
+ {:db/id "$s3" :scan/scan "s3" :scan/date #inst "2017"
+  :scan/results ["$av1++trj.dogwin", "$av2++trojan.dogwin.b", "$av3++dogwin",           "$av4++dogwin.b",        ]}
+ {:db/id "$s4" :scan/scan "s4" :scan/date #inst "2017"
+  :scan/results ["$av1++ads.adrd",   "$av2++adware.pjapps.a", "$av3++android.pjapps.1", "$av4++trojan.dogwin.a", "$av5++generic"]}
+ {:db/id "$s5" :scan/scan "s5" :scan/date #inst "2017"
+  :scan/results ["$av1++ads.adrd",   "$av2++adware.pjapps.b", "$av3++android.adrd.1",   "$av4++andr.adrd",    "$av5++generic"]}
+ ;; REPORTS
+ {:report/resource "f1" :report/scan "$s1"}
+ {:report/resource "f2" :report/scan "$s2"}
+ {:report/resource "f3" :report/scan "$s3"}
+ {:report/resource "f4" :report/scan "$s4"}
+ {:report/resource "f5" :report/scan "$s5"}
+ ;; TRUTH
+ {:truth/resource "f1" :truth/name "dogwin" :truth/type "trojan" :truth/platform "android"}
+ {:truth/resource "f2" :truth/name "dogwin" :truth/type "trojan" :truth/platform "android"}
+ {:truth/resource "f3" :truth/name "dogwin" :truth/type "trojan" :truth/platform "android"}
+ {:truth/resource "f4" :truth/name "adrd" :truth/type "adware" :truth/platform "android"}
+ {:truth/resource "f5" :truth/name "adrd" :truth/type "adware" :truth/platform "android"}
+ ]
