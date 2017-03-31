@@ -58,9 +58,13 @@ For end users, the single jar is recommended.
 ## Report file (with two items)
 
 {"positives": 2, "resource": "5e82d73a3b2d4df192d674729f9578c4081d5096d5e3641bf8b233e1bee248d4", "verbose_msg": "Scan finished, information embedded", "scans": {"NANO-Antivirus": {"result": null, "version": "1.0.38.8984", "detected": false, "update": "20160713"}, "AVware": {"result": "Trojan.AndroidOS.Generic.A", "version": "1.5.0.42", "detected": true, "update": "20160713"}, "ESET-NOD32": {"result": "Android/Adrd.A", "version": "13792", "detected": true, "update": "20160712"}}, "sha1": "09b143b430e836c513279c0209b7229a4d29a18c", "total": 55, "scan_id": "5e82d73a3b2d4df192d674729f9578c4081d5096d5e3641bf8b233e1bee248d4-1468430330", "permalink": "https://www.virustotal.com/file/5e82d73a3b2d4df192d674729f9578c4081d5096d5e3641bf8b233e1bee248d4/analysis/1468430330/", "sha256": "5e82d73a3b2d4df192d674729f9578c4081d5096d5e3641bf8b233e1bee248d4", "scan_date": "2016-07-13 17:18:50", "md5": "c05c25b769919fd7f1b12b4800e374b5", "response_code": 1}
+
+
 {"positives": 1, "resource": "2357651f3d15838330368dacf37252f1ff2362ce7fd84d42c175c4f3b65a8d8d", "verbose_msg": "Scan finished, information embedded", "scans": {"Tencent": {"result": "a.remote.adrd", "version": "1.0.0.1", "detected": true, "update": "20160707"}}, "sha1": "32cd5dbef434b926ce34e89f0d185fe8d1b5fdfb", "total": 54, "scan_id": "2357651f3d15838330368dacf37252f1ff2362ce7fd84d42c175c4f3b65a8d8d-1467894540", "permalink": "https://www.virustotal.com/file/2357651f3d15838330368dacf37252f1ff2362ce7fd84d42c175c4f3b65a8d8d/analysis/1467894540/", "sha256": "2357651f3d15838330368dacf37252f1ff2362ce7fd84d42c175c4f3b65a8d8d", "scan_date": "2016-07-07 12:29:00", "md5": "39c1bfbb62687e1b1d2bc4d273600448", "response_code": 1}
 
 ## Ground-truth file (with two items)
 
 {"resource": "f63256cf4eef0a60fe56989b1474dd9b0b2bb580ce9fd262b18592bf0506f911", "name": "Adwo", "type": "adware", "platform": "android"}
+
+
 {"resource": "a9cbe3e3d446cea683c1e72f2994f40024afed1bb1186b27690ff21741046312", "name": "Dowgin", "type": "trojan", "platform": "linux"}
