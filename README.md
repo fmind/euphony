@@ -1,6 +1,6 @@
 # What is Euphony ?
 
-Euphony is a __unifier of malware labels__.
+__Euphony is a unifier of malware labels__.
 
 From a list of [VirusTotal](https://www.virustotal.com/) reports, Euphony can parse malware labels and produce a single family per file.
 
