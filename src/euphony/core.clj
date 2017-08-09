@@ -1,6 +1,8 @@
 (ns euphony.core
   (:gen-class)
-  (:require [euphony.tasks :as tasks]
+  (:require 
+            [clojure.string :as Str]
+            [euphony.tasks :as tasks]
             [euphony.utils
              [cli :as cli]
              [log :as log]]))
@@ -20,8 +22,8 @@
    ["-t" "--threshold VALUE" "Set the threshold value for the trimming operation at the clustering stage."
     :parse-fn #(Float/parseFloat %) :default tasks/THRESHOLD :validate [#(<= 0 % 1) "Must be float: 0 <= x <= 1."]]
    ["-e" "--export-dir DIR" "Set the output directory of the program." :default (System/getProperty "user.dir")]
-   ["-f" "--field" "Set the label field to cluster and export." :default tasks/DEFAULT-FIELD :parse-fn #(keyword %)
-    :validate [#(tasks/FIELDS %) (str "Must be in: " (->> tasks/FIELDS (map name) (interpose ",")))]]
+   ["-f" "--field FIELD" "Set the label field to cluster and export." :default tasks/DEFAULT-FIELD :parse-fn #(keyword %)
+    :validate [#(tasks/FIELDS %) (str "Must be in: " (->> tasks/FIELDS (map name) (Str/join ",")))]]
    ;; RESOURCES
    ["-r" "--reports-file FILE" "Provide a sequence of reports from VirusTotal formatted as JSON records."]
    ["-g" "--ground-file FILE" "Provide a ground-truth to evaluate the output formatted as CSV tuples."]
