@@ -1,18 +1,15 @@
 (ns euphony.tasks
-  (:require [euphony
-             [commits :as c]
-             [queries :as q]
-             [system :as sys]]
-            [euphony.commands
-             [analyzers :as analyzers]
-             [clusterer :as clusterer]
-             [importer :as importer]
-             [parser :as parser]]
+  (:require [euphony.commands.analyzers :as analyzers]
+            [euphony.commands.clusterer :as clusterer]
+            [euphony.commands.importer :as importer]
+            [euphony.commands.parser :as parser]
+            [euphony.commits :as c]
             [euphony.functions.voters :as v]
-            [euphony.protocols.conn :as pc]
-            [euphony.utils
-             [io :as io]
-             [log :as log]]
+            [euphony.queries :as q]
+            [euphony.system :as sys]
+            [euphony.utils.db :as d]
+            [euphony.utils.io :as io]
+            [euphony.utils.log :as log]
             [medley.core :as m]))
 
                                         ; DEFAULTS
@@ -22,10 +19,14 @@
 (def THRESHOLD clusterer/THRESHOLD)
 (def FIELDS #{:name :type :platform})
 
-(def DATABASE-URI (-> sys/CONF :conn :uri))
-(def SEEDS-FILE (-> sys/CONF :conn :seeds-file))
+(def DATABASE-URI (-> sys/CONF :datomic :uri))
+(def SEEDS-FILE (-> sys/CONF :datomic :seeds-file))
 
                                         ; COMPOSABLES
+
+(defn with-datomic-conn [{:keys [datomic] :as context}]
+  {:pre [datomic] :post [(contains? % :conn)]}
+  (assoc context :conn (:conn datomic)))
 
 (defn import-reports-to-connection! [{:keys [conn reports-file] :as context}]
   {:pre [conn] :post [(contains? % :conn)]}
@@ -48,7 +49,7 @@
 (defn with-unknown-labels [{:keys [conn] :as context}]
   {:pre [conn] :post [(contains? % :labels)]}
   (log/log :info "Associating labels with unknown fields pattern")
-  (assoc context :labels (q/db>labels-with-unknown-fields-pattern (pc/db conn))))
+  (assoc context :labels (q/db>labels-with-unknown-fields-pattern (d/db conn))))
 
 (defn with-parse-mapping! [{:keys [conn labels] :as context}]
   {:pre [conn (not-empty labels)] :post [(contains? % :parse-mapping)]}
@@ -66,7 +67,7 @@
 (defn with-vendor-reports [{:keys [conn vendor-field] :as context}]
   {:pre [conn vendor-field] :post [(contains? % :vendor-reports)]}
   (log/log :info "Associating vendor reports based on:" vendor-field)
-  (assoc context :vendor-reports (q/db>report->vendor-results vendor-field (pc/db conn))))
+  (assoc context :vendor-reports (q/db>report->vendor-results vendor-field (d/db conn))))
 
 (defn with-cluster-graph [{:keys [vendor-reports] :as context}]
   {:pre [vendor-reports] :post [(contains? % :cluster-graph)]}
@@ -88,22 +89,22 @@
 (defn with-cluster-reports [{:keys [conn cluster-field] :as context}]
   {:pre [conn cluster-field] :post [(contains? % :cluster-reports)]}
   (log/log :info "Associating cluster reports based on:" cluster-field)
-  (assoc context :cluster-reports (q/db>report->cluster-results cluster-field (pc/db conn))))
+  (assoc context :cluster-reports (q/db>report->cluster-results cluster-field (d/db conn))))
 
 (defn with-truth-field [{:keys [field] :as context}]
   {:pre [(FIELDS field)] :post [(contains? % :truth-field)]}
   (log/log :info "Associating truth field based on:" field)
-  (assoc context :truth-field (keyword "truth" (name field))))
+  (assoc context :truth-field (keyword "ground-truth" (name field))))
 
 (defn with-vendor-field [{:keys [field] :as context}]
   {:pre [(FIELDS field)] :post [(contains? % :vendor-field)]}
   (log/log :info "Associating vendor field based on:" field)
-  (assoc context :vendor-field (keyword "label" (str "vendor-" (name field)))))
+  (assoc context :vendor-field (keyword "antivirus.label" (str (name field) "-part"))))
 
 (defn with-cluster-field [{:keys [field] :as context}]
   {:pre [(FIELDS field)] :post [(contains? % :cluster-field)]}
   (log/log :info "Associating cluster field based on:" field)
-  (assoc context :cluster-field (keyword "result" (str "cluster-" (name field)))))
+  (assoc context :cluster-field (keyword "antivirus.result" (str (name field) "-cluster"))))
 
 (defn based-on-cluster-reports [{:keys [cluster-reports] :as context}]
   {:pre [cluster-reports]}
@@ -123,12 +124,12 @@
 (defn with-parse-rules [{:keys [conn vendor-field] :as context}]
   {:pre [conn vendor-field] :post [(contains? % :parse-rules)]}
   (log/log :info "Associating parse rules based on:" vendor-field)
-  (assoc context :parse-rules (q/db>label->attribute vendor-field (pc/db conn))))
+  (assoc context :parse-rules (q/db>label->attribute vendor-field (d/db conn))))
 
 (defn with-cluster-rules [{:keys [conn cluster-field] :as context}]
   {:pre [conn cluster-field] :post [(contains? % :cluster-rules)]}
   (log/log :info "Associating cluster rules based on:" cluster-field)
-  (assoc context :cluster-rules (q/db>result->attribute cluster-field (pc/db conn))))
+  (assoc context :cluster-rules (q/db>result->attribute cluster-field (d/db conn))))
 
 (defn with-malstats [{:keys [truths proposed] :as context}]
   (if (empty? truths) context
@@ -217,16 +218,16 @@
 (def with-all-stats (comp with-famstats with-malstats))
 
 (def all (comp export!
-               summarize!
-               with-all-stats
-               with-all-rules
-               vote-on-clusters!
-               cluster!
-               with-cluster-graph
-               parse!
-               import!
-               with-all-fields
-               ))
+            summarize!
+            with-all-stats
+            with-all-rules
+            vote-on-clusters!
+            cluster!
+            with-cluster-graph
+            parse!
+            import!
+            with-all-fields
+            with-datomic-conn))
 
                                         ; MAIN FUNCTIONS
 

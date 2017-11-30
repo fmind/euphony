@@ -1,116 +1,141 @@
 [
- ;; REPORT
- {:db/ident :report/resource
+ ;; ANTIVIRUS SYSTEMS
+ {:db/ident :antivirus.system/name
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :report/scan
-  :db/valueType :db.type/ref
-  :db/cardinality :db.cardinality/one}
+  :db/unique :db.unique/identity
+  :db/doc "an antivirus name (e.g. avg)"}
 
- ;; SCAN
- {:db/ident :scan/scan
+ ;; ANTIVIRUS REPORTS
+ {:db/ident :antivirus.report/resource
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :scan/date
+  :db/unique :db.unique/identity
+  :db/doc "a malware signature (sha256)."}
+ {:db/ident :antivirus.report/scan
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "a reference to a scan entity."}
+
+ ;; ANTIVIRUS SCANS
+ {:db/ident :antivirus.scan/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "any identifier for a scan"}
+ {:db/ident :antivirus.scan/date
   :db/valueType :db.type/instant
-  :db/cardinality :db.cardinality/one}
- {:db/ident :scan/results
+  :db/cardinality :db.cardinality/one
+  :db/doc "the date of the scan execution."}
+ {:db/ident :antivirus.scan/results
   :db/valueType :db.type/ref
-  :db/cardinality :db.cardinality/many}
+  :db/cardinality :db.cardinality/many
+  :db/doc "a reference to result entities."}
 
- ;; TRUTH
- {:db/ident :truth/resource
+ ;; ANTIVIRUS RESULTS
+ {:db/ident :antivirus.result/id
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :truth/name
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :truth/type
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :truth/platform
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/index true}
-
- ;; RESULTS
- {:db/ident :result/result
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :result/antivirus
+  :db/unique :db.unique/identity
+  :db/doc "any identifier for a result."}
+ {:db/ident :antivirus.result/label
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :result/label
+  :db/index true
+  :db/doc "a reference to an antivirus label."}
+ {:db/ident :antivirus.result/system
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :result/cluster-name
+  :db/index true
+  :db/doc "a reference to an antivirus system."}
+ {:db/ident :antivirus.result/name-cluster
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :result/cluster-type
+  :db/index true
+  :db/doc "the proposed cluster name for the result."}
+ {:db/ident :antivirus.result/type-cluster
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :result/cluster-platform
+  :db/index true
+  :db/doc "the proposed cluster type for the result."}
+ {:db/ident :antivirus.result/plat-cluster
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
+  :db/index true
+  :db/doc "the proposed cluster platform for the result."}
 
- ;; ANTIVIRUS
- {:db/ident :antivirus/antivirus
+ ;; ANTIVIRUS LABELS
+ {:db/ident :antivirus.label/label
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
-
- ;; LABEL
- {:db/ident :label/label
+  :db/unique :db.unique/identity
+  :db/doc "an antivirus malware label."}
+ {:db/ident :antivirus.label/words-pattern
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :label/words-pattern
+  :db/index true
+  :db/doc "the structure of the label words."}
+ {:db/ident :antivirus.label/fields-pattern
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :label/fields-pattern
+  :db/index true
+  :db/doc "the structure of the label fields."}
+ {:db/ident :antivirus.label/name-part
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :label/vendor-name
+  :db/index true
+  :db/doc "the sub-part linked to the label name."}
+ {:db/ident :antivirus.label/type-part
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :label/vendor-type
+  :db/index true
+  :db/doc "the sub-part linked to the label type."}
+ {:db/ident :antivirus.label/plat-part
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :label/vendor-platform
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :label/words
+  :db/index true
+  :db/doc "the sub-part linked to the label platform."}
+ {:db/ident :antivirus.label/words
   :db/valueType :db.type/ref
-  :db/cardinality :db.cardinality/many}
+  :db/cardinality :db.cardinality/many
+  :db/doc "the reference to words contained in this label."}
 
- ;; WORD
- {:db/ident :word/word
+ ;; ANTIVIRUS WORDS
+ {:db/ident :antivirus.word/word
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/unique :db.unique/identity}
- {:db/ident :word/field
-  :db/doc "final field"
+  :db/unique :db.unique/identity
+  :db/doc "a word used by antivirus."}
+ {:db/ident :antivirus.word/field
   :db/valueType :db.type/keyword
   :db/cardinality :db.cardinality/one
-  :db/index true}
- {:db/ident :word/fields
-  :db/doc "candidate fields"
+  :db/index true
+  :db/doc "the final field associated to a word."}
+ {:db/ident :antivirus.word/candidate-fields
   :db/valueType :db.type/keyword
   :db/cardinality :db.cardinality/many
-  :db/noHistory true}]
+  :db/noHistory true
+  :db/doc "the candidate fields (for ambiguous words)."}
+
+ ;; GROUND-TRUTH REPORTS
+ {:db/ident :ground-truth/resource
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "a malware signature (sha256)."}
+ {:db/ident :ground-truth/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/index true
+  :db/doc "the truth about the malware name."}
+ {:db/ident :ground-truth/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/index true
+  :db/doc "the truth about the malware type."}
+ {:db/ident :ground-truth/plat
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/index true
+  :db/doc "the truth about the malware platform."}
+ ]

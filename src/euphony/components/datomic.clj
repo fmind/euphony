@@ -1,52 +1,44 @@
 (ns euphony.components.datomic
   (:require [com.stuartsierra.component :as component]
-            [datomic.api :as datomic]
-            [euphony.protocols.conn :as pc]
-            [euphony.utils
-             [io :as io]
-             [log :as log]]))
+            [datomic.api :as d]
+            [euphony.utils.db :as Db]
+            [euphony.utils.io :as io]
+            [euphony.utils.log :as log]))
 
                                         ; HELPERS
 
-(def transact* (comp :db-after datomic/with))
-
 (defn install-schema [conn schema-file]
-  (pc/transact conn (io/read-edn! schema-file)))
+  (log/log :info "** installing schema")
+  (d/transact conn (io/read-edn! schema-file)))
 
 (defn install-seeds [conn seeds-file]
-  (pc/transact conn (io/read-edn! seeds-file)))
+  (log/log :info "** installing seeds")
+  (d/transact conn (io/read-edn! seeds-file)))
 
                                         ; COMPONENT
 
-(defrecord Datomic [reset-on-stop reset-on-start
-                    uri schema-file seeds-file
-                    no-side-effect conn]
+(defrecord Datomic [conn uri
+                    schema-file seeds-file
+                    reset-on-start reset-on-stop]
   component/Lifecycle
   (start [this]
     (log/log :info "Starting Datomic at:" uri)
     (when reset-on-start
       (log/log :info "* deleting database")
-      (datomic/delete-database uri))
-    (let [created (datomic/create-database uri), conn (datomic/connect uri)
-          this (assoc this :conn (if no-side-effect (datomic/db conn) conn))]
-      (if (not created) this
-          (do (log/log :info "* creating database")
-              (-> this (install-schema schema-file) (install-seeds seeds-file))))))
+      (d/delete-database uri))
+    (let [new? (d/create-database uri)
+          conn (d/connect uri)]
+      (when new?
+        (log/log :info "* creating database")
+        (install-schema conn schema-file)
+        (install-seeds conn seeds-file))
+      (assoc this :conn conn)))
   (stop [this]
     (log/log :info "Stopping Datomic:" uri)
     (when reset-on-stop
       (log/log :info "* deleting database")
-      (datomic/delete-database uri))
-    (dissoc this :conn))
-  pc/Conn
-  (db [this]
-    (if no-side-effect
-      (:conn this) ;; datomic.db
-      (datomic/db (:conn this))))
-  (transact [this datoms]
-    (if no-side-effect
-      (update this :conn transact* datoms)
-      (do (datomic/transact (:conn this) datoms) this))))
+      (d/delete-database uri))
+    (dissoc this :conn)))
 
 (defn new-datomic [conf]
   (map->Datomic conf))

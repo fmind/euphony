@@ -1,8 +1,8 @@
 (ns euphony.commands.importer
   (:require [clojure.java.io :as jio]
             [clojure.string :as Str]
-            [euphony.protocols.conn :as pc]
             [euphony.structs.label :as l]
+            [euphony.utils.db :as d]
             [euphony.utils.io :as io]))
 
                                         ; HELPERS
@@ -16,25 +16,25 @@
 
 (defn truth>struct->datoms [{:strs [resource name type platform] :as struct}]
   (if (Str/blank? resource) []
-      [(cond-> {:truth/resource resource}
-         name (assoc :truth/name (Str/lower-case name))
-         type (assoc :truth/type (Str/lower-case type))
-         platform (assoc :truth/platform (Str/lower-case platform)))]))
+      [(cond-> {:ground-truth/resource resource}
+         name (assoc :ground-truth/name (Str/lower-case name))
+         type (assoc :ground-truth/type (Str/lower-case type))
+         platform (assoc :ground-truth/plat (Str/lower-case platform)))]))
 
 (defn result>struct->datoms [[antivirus {:strs [result detected]}]]
   (if (or (Str/blank? antivirus) (Str/blank? result) (not detected)) []
       (let [av (Str/lower-case antivirus), label (Str/lower-case result), rid (l/result->id [av label])]
-        [{:db/id av :antivirus/antivirus av} {:db/id label :label/label label}
-         {:db/id rid :result/result rid :result/antivirus av :result/label label}])))
+        [{:db/id av :antivirus.system/name av} {:db/id label :antivirus.label/label label}
+         {:db/id rid :antivirus.result/id rid :antivirus.result/system av :antivirus.result/label label}])))
 
 (defn report>struct->datoms [{:strs [scan_id scan_date resource positives scans] :as struct}]
   (if (or (Str/blank? resource) (Str/blank? scan_id) (Str/blank? scan_date) (zero? positives)) []
       (let [id (Str/lower-case scan_id), date (to-date scan_date), resource (Str/lower-case resource)
             results-datoms (mapcat result>struct->datoms scans)]
         (concat results-datoms
-                [{:db/id id :scan/scan id :scan/date date
-                  :scan/results (->> results-datoms (filter :result/result) (map :db/id))}
-                 {:report/resource resource :report/scan id :db/txInstant date}]))))
+                [{:db/id id :antivirus.scan/id id :antivirus.scan/date date
+                  :antivirus.scan/results (->> results-datoms (filter :antivirus.result/id) (map :db/id))}
+                 {:antivirus.report/resource resource :antivirus.report/scan id :db/txInstant date}]))))
 
                                         ; COMPOSITIONS
 
@@ -53,5 +53,5 @@
   "Import a file to connection using a pipeline."
   [pipeline file conn]
   (with-open [reader (jio/reader file)]
-    (reduce (fn [co line] (pc/transact co (pipeline line)))
+    (reduce (fn [co line] (d/transact co (pipeline line)))
             conn (line-seq reader))))

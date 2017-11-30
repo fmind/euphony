@@ -47,8 +47,8 @@
 
 (defn system-conf [options]
   (cond-> options
-    (contains? options :database-uri) (update-in [:system :conn] assoc :uri (options :database-uri))
-    (contains? options :seeds-file) (update-in [:system :conn] assoc :seeds-file (options :seeds-file))))
+    (contains? options :database-uri) (update-in [:system :datomic] assoc :uri (options :database-uri))
+    (contains? options :seeds-file) (update-in [:system :datomic] assoc :seeds-file (options :seeds-file))))
 
 (defn -main [& args]
   (let [{:keys [arguments options summary errors]} (cli/parse args OPTIONS)]

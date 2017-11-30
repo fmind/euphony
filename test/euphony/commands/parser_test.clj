@@ -4,7 +4,7 @@
              [queries :as q]
              [test-system :as ts]]
             [euphony.commands.parser :refer :all]
-            [euphony.protocols.conn :as pc]
+            [euphony.utils.db :as d]
             [euphony.structs.label :as l]
             [euphony.utils.log :as log]))
 
@@ -40,10 +40,11 @@
 (t/deftest can-parse-labels
   (let [results ts/*results*
         labels (map second results)
+        before-parse (d/db ts/*conn-after-results*)
         [conn mapping] (log/with-level :info (parse ts/*conn-after-results* labels))
         label-fields (fn [mapping l] (->> (get mapping l) (filter l/token-word?) (map l/token-fields)))]
-    (t/is (= (count (q/db>labels-with-unknown-fields-pattern (pc/db ts/*conn-after-results*))) 149))
-    (t/is (= (count (q/db>labels-with-unknown-fields-pattern (pc/db conn))) 17))
+    (t/is (= (count (q/db>labels-with-unknown-fields-pattern before-parse)) 149))
+    (t/is (= (count (q/db>labels-with-unknown-fields-pattern (d/db conn))) 17))
     (t/are [label, fields] (= (label-fields mapping label) fields)
       "a variant of android/adware.adswo.b" [#{:I} #{:I} #{:I} #{:P} #{:T} #{:N} #{:I}]
       "a variant of android/beanbot.a" [#{:I} #{:I} #{:I} #{:P} #{:N} #{:I}]

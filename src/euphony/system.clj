@@ -5,9 +5,9 @@
 
                                         ; DEFAULTS
 
-(def CONF {:conn {:uri "datomic:mem://euphony"
-                  :schema-file (jio/resource "schema.edn")
-                  :seeds-file (jio/resource "seeds-max.edn")}})
+(def CONF {:datomic {:schema-file (jio/resource "schema.edn")
+                     :seeds-file (jio/resource "seeds.edn")
+                     :uri "datomic:mem://euphony"}})
 
                                         ; ALIASES
 
@@ -19,7 +19,7 @@
 (defn- components
   [conf]
   (component/system-map
-   :conn (new-datomic (:conn conf))))
+   :datomic (new-datomic (:datomic conf))))
 
 (defn- dependencies
   [conf] {})

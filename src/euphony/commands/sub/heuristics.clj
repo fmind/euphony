@@ -17,7 +17,7 @@
   [db label tokens & [{:keys [setter] :or {setter l/token-set-fields}}]] {:post [(= (count %) (count tokens))]}
   (l/map-token-word
    (fn [token]
-     (when-let [db-field (-> (q/db>word db (l/token-text token)) :word/field)]
+     (when-let [db-field (-> (q/db>word db (l/token-text token)) :antivirus.word/field)]
        (setter token #{db-field})))
    tokens))
 

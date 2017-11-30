@@ -1,16 +1,16 @@
 [
- {:db/id [:label/label "ads.adrd"] :label/words-pattern "w.w" :label/fields-pattern "T.N" :label/vendor-name "adrd" :label/vendor-type "ads"}
- {:db/id [:label/label "adware.pjapps.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "pjapps" :label/vendor-type "adware"}
- {:db/id [:label/label "adware.pjapps.b"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "pjapps" :label/vendor-type "adware"}
- {:db/id [:label/label "andr.adrd"] :label/words-pattern "w.w" :label/fields-pattern "P.N" :label/vendor-name "adrd" :label/vendor-platform "andr"}
- {:db/id [:label/label "android.adrd.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "adrd" :label/vendor-platform "android"}
- {:db/id [:label/label "android.koguo.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "koguo" :label/vendor-platform "android"}
- {:db/id [:label/label "android.pjapps.1"] :label/words-pattern "w.w.w" :label/fields-pattern "P.N.I" :label/vendor-name "pjapps" :label/vendor-platform "android"}
- {:db/id [:label/label "dogwin"] :label/words-pattern "w"}
- {:db/id [:label/label "dogwin.b"] :label/words-pattern "w.w"}
- {:db/id [:label/label "generic"] :label/words-pattern "w" :label/fields-pattern "I" :label/vendor-name "generic"}
- {:db/id [:label/label "trj.dogwin"] :label/words-pattern "w.w" :label/fields-pattern "T.N" :label/vendor-name "dogwin" :label/vendor-type "trj"}
- {:db/id [:label/label "trojan.dogwin.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "dogwin" :label/vendor-type "trojan"}
- {:db/id [:label/label "trojan.dogwin.b"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "dogwin" :label/vendor-type "trojan"}
- {:db/id [:label/label "trojan.koguo.a"] :label/words-pattern "w.w.w" :label/fields-pattern "T.N.I" :label/vendor-name "koguo" :label/vendor-type "trojan"}
+ {:db/id [:antivirus.label/label "ads.adrd"] :antivirus.label/words-pattern "w.w" :antivirus.label/fields-pattern "T.N" :antivirus.label/name-part "adrd" :antivirus.label/type-part "ads"}
+ {:db/id [:antivirus.label/label "adware.pjapps.a"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.N.I" :antivirus.label/name-part "pjapps" :antivirus.label/type-part "adware"}
+ {:db/id [:antivirus.label/label "adware.pjapps.b"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.N.I" :antivirus.label/name-part "pjapps" :antivirus.label/type-part "adware"}
+ {:db/id [:antivirus.label/label "andr.adrd"] :antivirus.label/words-pattern "w.w" :antivirus.label/fields-pattern "P.N" :antivirus.label/name-part "adrd" :antivirus.label/plat-part "andr"}
+ {:db/id [:antivirus.label/label "android.adrd.1"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.N.I" :antivirus.label/name-part "adrd" :antivirus.label/plat-part "android"}
+ {:db/id [:antivirus.label/label "android.koguo.1"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.N.I" :antivirus.label/name-part "koguo" :antivirus.label/plat-part "android"}
+ {:db/id [:antivirus.label/label "android.pjapps.1"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.N.I" :antivirus.label/name-part "pjapps" :antivirus.label/plat-part "android"}
+ {:db/id [:antivirus.label/label "dogwin"] :antivirus.label/words-pattern "w"}
+ {:db/id [:antivirus.label/label "dogwin.b"] :antivirus.label/words-pattern "w.w"}
+ {:db/id [:antivirus.label/label "generic"] :antivirus.label/words-pattern "w" :antivirus.label/fields-pattern "I" :antivirus.label/name-part "generic"}
+ {:db/id [:antivirus.label/label "trj.dogwin"] :antivirus.label/words-pattern "w.w" :antivirus.label/fields-pattern "T.N" :antivirus.label/name-part "dogwin" :antivirus.label/type-part "trj"}
+ {:db/id [:antivirus.label/label "trojan.dogwin.a"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.N.I" :antivirus.label/name-part "dogwin" :antivirus.label/type-part "trojan"}
+ {:db/id [:antivirus.label/label "trojan.dogwin.b"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.N.I" :antivirus.label/name-part "dogwin" :antivirus.label/type-part "trojan"}
+ {:db/id [:antivirus.label/label "trojan.koguo.a"] :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.N.I" :antivirus.label/name-part "koguo" :antivirus.label/type-part "trojan"}
  ]

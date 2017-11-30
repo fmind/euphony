@@ -1,13 +1,13 @@
 (ns euphony.commands.sub.heuristics-test
   (:require [clojure.test :as t]
             [euphony.commands.sub.heuristics :refer :all]
-            [euphony.protocols.conn :as pc]
+            [euphony.utils.db :as d]
             [euphony.test-system :as ts]))
 
 (t/use-fixtures :once ts/with-conn-initial)
 
 (t/deftest can-deduce-known-words
-  (t/are [tokens, output] (= (deduce-known-words (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (deduce-known-words (d/db ts/*conn-initial*) "" tokens) output)
     ;; one word, unknown
     [[:w "cat" #{}]], [[:w "cat" #{}]]
     [[:w "cat" #{:T}]], [[:w "cat" #{:T}]]
@@ -22,7 +22,7 @@
     [[:w "trojan" #{:T :P}] [:s "!"] [:w "cat" #{:T :P}]],[[:w "trojan" #{:T}] [:s "!"] [:w "cat" #{:T :P}]]))
 
 (t/deftest can-deduce-signature-tokens
-  (t/are [tokens, output] (= (deduce-signature-tokens (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (deduce-signature-tokens (d/db ts/*conn-initial*) "" tokens) output)
     ;; ok
     [[:w "12341234" #{:I :P :N :T}]], [[:w "12341234" #{:I}]]
     [[:w "1234abcd" #{:I :P :N :T}]], [[:w "1234abcd" #{:I}]]
@@ -45,11 +45,10 @@
     ;; too big
     [[:w "abcdabcdabcdabcd" #{:I :P :N :T}]], [[:w "abcdabcdabcdabcd" #{:I :P :N :T}]]
     [[:w "1234123412341234" #{:I :P :N :T}]], [[:w "1234123412341234" #{:I :P :N :T}]]
-    [[:w "1234abcd1234abcd" #{:I :P :N :T}]], [[:w "1234abcd1234abcd" #{:I :P :N :T}]]
-    ))
+    [[:w "1234abcd1234abcd" #{:I :P :N :T}]], [[:w "1234abcd1234abcd" #{:I :P :N :T}]]))
 
 (t/deftest can-deduce-words-suffixed-by-ware
-  (t/are [tokens, output] (= (deduce-words-suffixed-by-ware (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (deduce-words-suffixed-by-ware (d/db ts/*conn-initial*) "" tokens) output)
     ;; one word, not suffixed by -ware
     [[:w "cat" #{}]], [[:w "cat" #{}]]
     [[:w "cat" #{:T}]], [[:w "cat" #{:T}]]
@@ -64,7 +63,7 @@
     [[:w "spyware" #{:T :P}] [:s "!"] [:w "cat" #{:T :P}]],[[:w "spyware" #{:T}] [:s "!"] [:w "cat" #{:T :P}]]))
 
 (t/deftest can-deduce-words-between-parenthesis
-  (t/are [label tokens, output] (= (deduce-words-between-parenthesis (pc/db ts/*conn-initial*) label tokens) output)
+  (t/are [label tokens, output] (= (deduce-words-between-parenthesis (d/db ts/*conn-initial*) label tokens) output)
     ;; one word, not between parenthesis
     "test" [[:w "test" #{}]], [[:w "test" #{}]]
     "test" [[:w "test" #{:I}]], [[:w "test" #{:I}]]
@@ -80,7 +79,7 @@
     "(te!st)" [[:s "("] [:w "test" #{:I :P}] [:s ")"]], [[:s "("] [:w "test" #{:I :P}] [:s ")"]]))
 
 (t/deftest can-deduce-words-between-square-brackets
-  (t/are [label tokens, output] (= (deduce-words-between-square-brackets (pc/db ts/*conn-initial*) label tokens) output)
+  (t/are [label tokens, output] (= (deduce-words-between-square-brackets (d/db ts/*conn-initial*) label tokens) output)
     ;; one word, not between square brackets
     "test" [[:w "test" #{}]], [[:w "test" #{}]]
     "test" [[:w "test" #{:I}]], [[:w "test" #{:I}]]
@@ -97,7 +96,7 @@
     "[te!st]" [[:s "["] [:w "test" #{:I :P}] [:s "]"]], [[:s "["] [:w "test" #{:I :P}] [:s "]"]]))
 
 (t/deftest can-infer-words-in-english-sentence-at-beginning
-  (t/are [tokens, output] (= (infer-words-in-english-sentence-at-beginning (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (infer-words-in-english-sentence-at-beginning (d/db ts/*conn-initial*) "" tokens) output)
     ;; OK (baseline)
     [[:w "variant" #{:I :N}] [:w "test" #{:I :P}]], [[:w "variant" #{:I}] [:w "test" #{:I}]]
     [[:w "variant" #{:I :N}] [:s " "] [:w "test" #{:I :P}]], [[:w "variant" #{:I}] [:s " "] [:w "test" #{:I}]]
@@ -114,7 +113,7 @@
     [[:w "variant" #{:I :N}] [:s "/"] [:w "test" #{:I :P}]], [[:w "variant" #{:I :N}] [:s "/"] [:w "test" #{:I :P}]]))
 
 (t/deftest can-infer-fields-by-elimination
-  (t/are [tokens, output] (= (infer-fields-by-elimination (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (infer-fields-by-elimination (d/db ts/*conn-initial*) "" tokens) output)
     ;; no known fields
     [[:w "1" #{}] [:w "2" #{}]], [[:w "1" #{}] [:w "2" #{}]]
     [[:w "1" #{:T :P}] [:w "2" #{:T :N}]], [[:w "1" #{:T :P}] [:w "2" #{:T :N}]]
@@ -135,50 +134,50 @@
         tokens [[:w "androidos" #{:P}] [:s "."] [:w "trojan" #{:T}] [:s "."] [:w "adrd" #{:N :I}]]
         found! [[:w "androidos" #{:P}] [:s "."] [:w "trojan" #{:T}] [:s "."] [:w "adrd" #{:N}]]
         not-found! tokens
-        local-conn (pc/transact ts/*conn-initial*
-                             [{:db/id "l1" :label/label "androidos.trojan.adrd" :label/words-pattern "w.w.w"}
-                              {:db/id "av1" :antivirus/antivirus "av1"} {:result/antivirus "av1" :result/label "l1"}])]
+        local-data (d/with (d/db ts/*conn-initial*)
+                           [{:db/id "l1" :antivirus.label/label "androidos.trojan.adrd" :antivirus.label/words-pattern "w.w.w"}
+                            {:db/id "av1" :antivirus.system/name "av1"} {:antivirus.result/system "av1" :antivirus.result/label "l1"}])]
     ;; TODO: one unknown token, two words in tokens
-    (t/are [conn, output] (= (infer-fields-from-compatible-patterns (pc/db conn) label tokens) output)
+    (t/are [db, output] (= (infer-fields-from-compatible-patterns db label tokens) output)
       ;; no compatible patterns
-      local-conn, tokens
+      local-data, tokens
       ;; one compatible pattern
-      (pc/transact local-conn
-                  [{:db/id "l2" :label/label "android.trojan.base"
-                    :label/words-pattern "w.w.w" :label/fields-pattern "P.T.N"}
-                   {:result/label "l2" :result/antivirus [:antivirus/antivirus "av1"]}]), found!
+      (d/with local-data
+              [{:db/id "l2" :antivirus.label/label "android.trojan.base"
+                :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.T.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system [:antivirus.system/name "av1"]}]), found!
       ;; incompatible antivirus
-      (pc/transact local-conn
-                  [{:db/id "av2" :antivirus/antivirus "av2"}
-                   {:db/id "l2" :label/label "android.trojan.base"
-                    :label/words-pattern "w.w.w" :label/fields-pattern "P.T.N"}
-                   {:result/label "l2" :result/antivirus "av2"}]), not-found!
+      (d/with local-data
+              [{:db/id "av2" :antivirus.system/name "av2"}
+               {:db/id "l2" :antivirus.label/label "android.trojan.base"
+                :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.T.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system "av2"}]), not-found!
       ;; incompatible words-pattern (separators)
-      (pc/transact local-conn
-                  [{:db/id "l2" :label/label "android:trojan:base"
-                    :label/words-pattern "w:w:w" :label/fields-pattern "P.T.N"}
-                   {:result/label "l2" :result/antivirus [:antivirus/antivirus "av1"]}]), not-found!
+      (d/with local-data
+              [{:db/id "l2" :antivirus.label/label "android:trojan:base"
+                :antivirus.label/words-pattern "w:w:w" :antivirus.label/fields-pattern "P.T.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system [:antivirus.system/name "av1"]}]), not-found!
       ;; incompatible words-pattern (cardinality)
-      (pc/transact local-conn
-                  [{:db/id "l2" :label/label "android.base"
-                    :label/words-pattern "w.w" :label/fields-pattern "P.N"}
-                   {:result/label "l2" :result/antivirus [:antivirus/antivirus "av1"]}]), not-found!
+      (d/with local-data
+              [{:db/id "l2" :antivirus.label/label "android.base"
+                :antivirus.label/words-pattern "w.w" :antivirus.label/fields-pattern "P.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system [:antivirus.system/name "av1"]}]), not-found!
       ;; incompatible fields-pattern
-      (pc/transact local-conn
-                  [{:db/id "l2" :label/label "trojan.android.base"
-                    :label/words-pattern "w.w.w" :label/fields-pattern "T.P.N"}
-                   {:result/label "l2" :result/antivirus [:antivirus/antivirus "av1"]}]), not-found!
+      (d/with local-data
+              [{:db/id "l2" :antivirus.label/label "trojan.android.base"
+                :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "T.P.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system [:antivirus.system/name "av1"]}]), not-found!
       ;; multiple compatible pattern
-      (pc/transact local-conn
-                  [{:db/id "l2" :label/label "android.trojan.base"
-                    :label/words-pattern "w.w.w" :label/fields-pattern "P.T.N"}
-                   {:result/label "l2" :result/antivirus [:antivirus/antivirus "av1"]}
-                   {:db/id "l3" :label/label "android.trojan.1"
-                    :label/words-pattern "w.w.w" :label/fields-pattern "P.T.I"}
-                   {:result/label "l3" :result/antivirus [:antivirus/antivirus "av1"]}]), not-found!)))
+      (d/with local-data
+              [{:db/id "l2" :antivirus.label/label "android.trojan.base"
+                :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.T.N"}
+               {:antivirus.result/label "l2" :antivirus.result/system [:antivirus.system/name "av1"]}
+               {:db/id "l3" :antivirus.label/label "android.trojan.1"
+                :antivirus.label/words-pattern "w.w.w" :antivirus.label/fields-pattern "P.T.I"}
+               {:antivirus.result/label "l3" :antivirus.result/system [:antivirus.system/name "av1"]}]), not-found!)))
 
 (t/deftest can-infer-name-from-last-one-unknown-token
-  (t/are [tokens, output] (= (infer-name-from-last-one-unknown-token (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (infer-name-from-last-one-unknown-token (d/db ts/*conn-initial*) "" tokens) output)
     ;; OK (baseline)
     [[:w "T" #{:T}] [:w "P" #{:P}] [:w "adrd" #{:N :I}]], [[:w "T" #{:T}] [:w "P" #{:P}] [:w "adrd" #{:N}]]
     ;; not enough words to infer
@@ -195,7 +194,7 @@
     [[:w "T" #{:T}] [:w "P" #{:P}] [:w "pirate" #{:N :I}]], [[:w "T" #{:T}] [:w "P" #{:P}] [:w "pirate" #{:N :I}]]))
 
 (t/deftest can-infer-name-from-last-two-unknown-tokens
-  (t/are [tokens, output] (= (infer-name-from-last-two-unknown-tokens (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (infer-name-from-last-two-unknown-tokens (d/db ts/*conn-initial*) "" tokens) output)
     ;; OK (baseline)
     [[:w "adrd" #{:I :N}] [:w "test" #{:I :N}]], [[:w "adrd" #{:N}] [:w "test" #{:I}]]
     [[:w "test" #{:I :N}] [:w "adrd" #{:I :N}]], [[:w "test" #{:I}] [:w "adrd" #{:N}]]
@@ -212,7 +211,7 @@
     [[:w "adr" #{:I :N}] [:w "test" #{:I :N}]], [[:w "adr" #{:N :I}] [:w "test" #{:N :I}]]))
 
 (t/deftest can-infer-synonyms-from-known-platforms-and-types
-  (t/are [tokens, output] (= (infer-synonyms-from-known-platforms-and-types (pc/db ts/*conn-initial*) "" tokens) output)
+  (t/are [tokens, output] (= (infer-synonyms-from-known-platforms-and-types (d/db ts/*conn-initial*) "" tokens) output)
     ;; word is a synonym (baseline)
     [[:w "android" #{:P :T :I :N}]], [[:w "android" #{:P}]]       ;; with androidos
     [[:w "ransomware" #{:P :T :I :N}]], [[:w "ransomware" #{:T}]] ;; with ransom

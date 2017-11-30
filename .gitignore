@@ -12,7 +12,4 @@ pom.xml.asc
 .hg/
 
 OLD/
-.idea
 scripts/
-setup.yml
-euphony.iml

@@ -1,13 +1,11 @@
 (ns euphony.commands.parser
   (:require [clojure.set :as Set]
-            [euphony
-             [commits :as c]
-             [queries :as q]]
             [euphony.commands.sub.heuristics :as hx]
-            [euphony.protocols.conn :as pc]
-            [euphony.structs
-             [label :as l]
-             [pqueue :as p]]))
+            [euphony.commits :as c]
+            [euphony.queries :as q]
+            [euphony.structs.label :as l]
+            [euphony.structs.pqueue :as p]
+            [euphony.utils.db :as d]))
 
                                         ; DEFAULTS
 
@@ -82,9 +80,9 @@
         (let [[token & findings] findings]
           (if (l/token-sep? token) ;; separator case
             (recur findings conn (conj tokens token))
-            (let [db (pc/db conn)
+            (let [db (d/db conn)
                   [_ word mem-fields] (l/token-parts token)
-                  db-fields (-> (q/db>word db word) :word/fields)
+                  db-fields (-> (q/db>word db word) :antivirus.word/candidate-fields)
                   intersection (Set/intersection mem-fields db-fields)]
               (recur findings
                      (c/db>word-fields combine conn word mem-fields)
@@ -109,7 +107,7 @@
       (let [[[label tokens] [turn _]] (peek queue)]
         (if (or (>= turn max-turn) (empty? queue))
           [conn (into complete (keys queue))] ;; return case: conn and tokens
-          (let [findings (search heuristics (pc/db conn) label tokens turn)
+          (let [findings (search heuristics (d/db conn) label tokens turn)
                 [conn tokens] (combine conn findings), entry [label tokens]]
             (if-not (l/tokens-assignment-complete? tokens)
               (recur conn (conj (pop queue) [entry (priority (inc turn) entry)]) complete)
