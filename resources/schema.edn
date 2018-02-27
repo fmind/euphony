@@ -137,5 +137,4 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/index true
-  :db/doc "the truth about the malware platform."}
- ]
+  :db/doc "the truth about the malware platform."}]

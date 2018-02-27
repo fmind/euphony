@@ -105,8 +105,8 @@
         conn (populate conn (keys queue)), complete (hash-map)]
     (loop [conn conn, queue queue, complete complete]
       (let [[[label tokens] [turn _]] (peek queue)]
-        (if (or (>= turn max-turn) (empty? queue))
-          [conn (into complete (keys queue))] ;; return case: conn and tokens
+        (if (or (empty? queue) (>= turn max-turn))
+          [conn (into complete (keys queue))] ;; return: conn and tokens
           (let [findings (search heuristics (d/db conn) label tokens turn)
                 [conn tokens] (combine conn findings), entry [label tokens]]
             (if-not (l/tokens-assignment-complete? tokens)
