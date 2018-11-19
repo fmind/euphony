@@ -1,6 +1,6 @@
 (defproject euphony "0.1.0"
   :description "A friendly translator in a world full of dangerous malware."
-  :license {:name "EUPL 1.2" :url "https://github.com/fmind/euphony/blob/master/LICENSE.txt"}
+  :license {:name "AGPL-3.0" :url "https://opensource.org/licenses/AGPL-3.0"}
   :url "https://github.com/fmind/euphony"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/math.combinatorics "0.1.4"]
