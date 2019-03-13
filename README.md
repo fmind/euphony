@@ -1,8 +1,3 @@
-# INFORMATION
-
-Euphony migrated to this repository:
-https://git.fmind.me/fmind/euphony
-
 # What is Euphony ?
 
 __Euphony is a unifier of malware labels__.
